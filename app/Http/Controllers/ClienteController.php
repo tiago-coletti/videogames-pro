@@ -2,23 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
 use Illuminate\Http\Request;
+use App\Models\Cliente;
 
 class ClienteController extends Controller
 {
-    public function index()
+    function index()
     {
-        $dados = Cliente::orderBy('nome')->get();
+        $dados = Cliente::all();
         return view('cliente.list', ['dados' => $dados]);
     }
 
-    public function create()
+    function create()
     {
         return view('cliente.form');
     }
 
-    private function validateRequest(Request $request, $id = null)
+    function store(Request $request)
+    {
+        $this->validateRequest($request);
+        $data = $request->all();
+        $data['ativo'] = $request->has('ativo') ? 1 : 0;
+
+        Cliente::create($data);
+
+        return redirect('cliente')->with('success', 'Registro cadastrado com sucesso!');
+    }
+
+    function edit($id)
+    {
+        $dado = Cliente::find($id);
+        return view('cliente.form', compact('dado'));
+    }
+
+    function update(Request $request, $id)
+    {
+        $this->validateRequest($request, $id);
+        $data = $request->all();
+        $data['ativo'] = $request->has('ativo') ? 1 : 0;
+
+        Cliente::find($id)->update($data);
+
+        return redirect('cliente')->with('success', 'Registro atualizado com sucesso!');
+    }
+
+    function destroy($id)
+    {
+        $dado = Cliente::find($id);
+
+        if ($dado->pedidos()->count() > 0) {
+            return redirect('cliente')->with('error', 'Não é possível excluir pois há pedidos vinculados.');
+        }
+
+        Cliente::destroy($id);
+
+        return redirect('cliente')->with('success', 'Registro removido com sucesso!');
+    }
+
+    function search(Request $request)
+    {
+        if (!empty($request->valor)) {
+            $dados = Cliente::where(
+                $request->tipo,
+                'like',
+                '%' . $request->valor . '%'
+            )->get();
+        } else {
+            $dados = Cliente::all();
+        }
+
+        return view('cliente.list', ['dados' => $dados]);
+    }
+
+    function validateRequest(Request $request, $id = null)
     {
         $cpfRule   = 'nullable|unique:clientes,cpf' . ($id ? ",$id" : '');
         $emailRule = 'required|email|unique:clientes,email' . ($id ? ",$id" : '');
@@ -32,52 +88,10 @@ class ClienteController extends Controller
             'cep'             => 'nullable|max:9',
             'estado'          => 'nullable|size:2',
         ], [
-            'nome.required'    => 'O nome é obrigatório.',
-            'email.required'   => 'O e-mail é obrigatório.',
+            'nome.required'    => 'O :attribute é obrigatório.',
+            'email.required'   => 'O :attribute é obrigatório.',
             'email.unique'     => 'Este e-mail já está cadastrado.',
             'cpf.unique'       => 'Este CPF já está cadastrado.',
         ]);
-    }
-
-    public function store(Request $request)
-    {
-        $this->validateRequest($request);
-        $data = $request->except('_token');
-        $data['ativo'] = $request->has('ativo') ? 1 : 0;
-        Cliente::create($data);
-        return redirect()->route('cliente.index')->with('success', 'Cliente cadastrado com sucesso!');
-    }
-
-    public function edit($id)
-    {
-        $dado = Cliente::findOrFail($id);
-        return view('cliente.form', ['dado' => $dado]);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $this->validateRequest($request, $id);
-        $data = $request->except(['_token', '_method']);
-        $data['ativo'] = $request->has('ativo') ? 1 : 0;
-        Cliente::findOrFail($id)->update($data);
-        return redirect()->route('cliente.index')->with('success', 'Cliente atualizado com sucesso!');
-    }
-
-    public function destroy($id)
-    {
-        $dado = Cliente::findOrFail($id);
-        if ($dado->pedidos()->count() > 0) {
-            return redirect()->route('cliente.index')->with('error', 'Não é possível excluir pois há pedidos vinculados.');
-        }
-        $dado->delete();
-        return redirect()->route('cliente.index')->with('success', 'Cliente removido com sucesso!');
-    }
-
-    public function search(Request $request)
-    {
-        $dados = !empty($request->valor)
-            ? Cliente::where($request->tipo, 'like', '%' . $request->valor . '%')->get()
-            : Cliente::orderBy('nome')->get();
-        return view('cliente.list', ['dados' => $dados]);
     }
 }

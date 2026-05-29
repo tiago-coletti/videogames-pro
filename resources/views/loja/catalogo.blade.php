@@ -5,19 +5,16 @@
 <div class="container py-4">
     <div class="row g-4">
 
-        <!-- SIDEBAR FILTROS -->
         <div class="col-lg-3">
             <div class="filter-panel">
                 <div class="filter-title"><i class="bi bi-funnel me-1"></i> Filtros</div>
 
                 <form action="{{ route('loja.catalogo') }}" method="GET" id="filterForm">
-                    <!-- Busca -->
                     <div class="mb-3">
                         <label class="form-label">Buscar</label>
                         <input type="text" class="form-control form-control-sm" name="busca" value="{{ request('busca') }}" placeholder="Nome do produto...">
                     </div>
 
-                    <!-- Tipo -->
                     <div class="mb-3">
                         <label class="form-label">Tipo</label>
                         <select name="tipo" class="form-select form-select-sm">
@@ -28,7 +25,6 @@
                         </select>
                     </div>
 
-                    <!-- Plataforma -->
                     <div class="mb-3">
                         <label class="form-label">Plataforma</label>
                         <select name="plataforma_id" class="form-select form-select-sm">
@@ -39,7 +35,6 @@
                         </select>
                     </div>
 
-                    <!-- Categoria -->
                     <div class="mb-3">
                         <label class="form-label">Categoria</label>
                         <select name="categoria_id" class="form-select form-select-sm">
@@ -50,13 +45,11 @@
                         </select>
                     </div>
 
-                    <!-- Preço máximo -->
                     <div class="mb-3">
                         <label class="form-label">Preço máximo (R$)</label>
                         <input type="number" class="form-control form-control-sm" name="preco_max" value="{{ request('preco_max') }}" placeholder="Ex: 299">
                     </div>
 
-                    <!-- Ordenar -->
                     <div class="mb-4">
                         <label class="form-label">Ordenar por</label>
                         <select name="ordenar" class="form-select form-select-sm">
@@ -77,7 +70,6 @@
             </div>
         </div>
 
-        <!-- PRODUTOS -->
         <div class="col-lg-9">
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <div>
@@ -140,7 +132,6 @@
                     @endforeach
                 </div>
 
-                <!-- PAGINAÇÃO -->
                 <div class="d-flex justify-content-center mt-4">
                     {{ $produtos->links() }}
                 </div>

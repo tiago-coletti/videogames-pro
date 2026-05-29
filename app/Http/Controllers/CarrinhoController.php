@@ -2,22 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produto;
 use Illuminate\Http\Request;
+use App\Models\Produto;
 
 class CarrinhoController extends Controller
 {
-    private function getCarrinho()
-    {
-        return session('carrinho', []);
-    }
-
-    private function saveCarrinho(array $carrinho)
-    {
-        session(['carrinho' => $carrinho]);
-    }
-
-    public function index()
+    function index()
     {
         $carrinho = $this->getCarrinho();
         $total    = 0;
@@ -39,7 +29,7 @@ class CarrinhoController extends Controller
         return view('carrinho.index', compact('itens', 'total'));
     }
 
-    public function adicionar(Request $request, $produtoId)
+    function adicionar(Request $request, $produtoId)
     {
         $produto = Produto::findOrFail($produtoId);
         $carrinho = $this->getCarrinho();
@@ -52,10 +42,11 @@ class CarrinhoController extends Controller
         }
 
         $this->saveCarrinho($carrinho);
+
         return redirect()->back()->with('success', '"' . $produto->nome . '" adicionado ao carrinho!');
     }
 
-    public function atualizar(Request $request, $produtoId)
+    function atualizar(Request $request, $produtoId)
     {
         $carrinho = $this->getCarrinho();
         $qtd = (int) $request->quantidade;
@@ -67,24 +58,27 @@ class CarrinhoController extends Controller
         }
 
         $this->saveCarrinho($carrinho);
+
         return redirect()->route('carrinho.index')->with('success', 'Carrinho atualizado!');
     }
 
-    public function remover($produtoId)
+    function remover($produtoId)
     {
         $carrinho = $this->getCarrinho();
         unset($carrinho[$produtoId]);
         $this->saveCarrinho($carrinho);
+
         return redirect()->route('carrinho.index')->with('success', 'Item removido do carrinho.');
     }
 
-    public function limpar()
+    function limpar()
     {
         session()->forget('carrinho');
+
         return redirect()->route('carrinho.index')->with('success', 'Carrinho esvaziado.');
     }
 
-    public function finalizar(Request $request)
+    function finalizar(Request $request)
     {
         $request->validate([
             'nome'            => 'required',
@@ -97,8 +91,18 @@ class CarrinhoController extends Controller
             return redirect()->route('carrinho.index')->with('error', 'Seu carrinho está vazio.');
         }
 
-        // Simulação: limpa carrinho e retorna sucesso
         session()->forget('carrinho');
+
         return redirect()->route('loja.index')->with('success', 'Pedido finalizado com sucesso! Em breve você receberá a confirmação.');
+    }
+
+    private function getCarrinho()
+    {
+        return session('carrinho', []);
+    }
+
+    private function saveCarrinho(array $carrinho)
+    {
+        session(['carrinho' => $carrinho]);
     }
 }

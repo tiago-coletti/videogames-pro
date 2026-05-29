@@ -2,40 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
 use App\Models\Cliente;
 use App\Models\Produto;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class PedidoController extends Controller
 {
-    public function index()
+    function index()
     {
         $dados = Pedido::with('cliente')->orderByDesc('created_at')->get();
         return view('pedido.list', ['dados' => $dados]);
     }
 
-    public function create()
+    function create()
     {
         $clientes = Cliente::where('ativo', true)->orderBy('nome')->get();
         $produtos  = Produto::where('ativo', true)->where('estoque', '>', 0)->orderBy('nome')->get();
+
         return view('pedido.form', compact('clientes', 'produtos'));
     }
 
-    public function store(Request $request)
+    function store(Request $request)
     {
-        $request->validate([
-            'cliente_id'     => 'required|exists:clientes,id',
-            'forma_pagamento' => 'required',
-            'produtos'       => 'required|array|min:1',
-            'produtos.*'     => 'exists:produtos,id',
-            'quantidades.*'  => 'integer|min:1',
-        ], [
-            'cliente_id.required' => 'Selecione um cliente.',
-            'produtos.required'   => 'Adicione ao menos um produto.',
-        ]);
+        $this->validateRequest($request);
 
         $numero = 'PED-' . strtoupper(Str::random(8));
 
@@ -53,7 +45,7 @@ class PedidoController extends Controller
 
         $subtotal = 0;
         foreach ($request->produtos as $i => $produtoId) {
-            $produto = Produto::findOrFail($produtoId);
+            $produto = Produto::find($produtoId);
             $qtd     = $request->quantidades[$i] ?? 1;
             $preco   = $produto->preco_final;
             $sub     = $preco * $qtd;
@@ -72,24 +64,25 @@ class PedidoController extends Controller
         $total = $subtotal + ($pedido->frete ?? 0) - ($pedido->desconto ?? 0);
         $pedido->update(['subtotal' => $subtotal, 'total' => $total]);
 
-        return redirect()->route('pedido.index')->with('success', "Pedido $numero criado com sucesso!");
+        return redirect('pedido')->with('success', 'Registro cadastrado com sucesso!');
     }
 
-    public function show($id)
+    function show($id)
     {
-        $pedido = Pedido::with(['cliente', 'itens.produto'])->findOrFail($id);
+        $pedido = Pedido::with(['cliente', 'itens.produto'])->find($id);
         return view('pedido.show', compact('pedido'));
     }
 
-    public function edit($id)
+    function edit($id)
     {
-        $dado     = Pedido::with('itens.produto')->findOrFail($id);
+        $dado     = Pedido::with('itens.produto')->find($id);
         $clientes = Cliente::where('ativo', true)->orderBy('nome')->get();
         $produtos  = Produto::where('ativo', true)->orderBy('nome')->get();
+
         return view('pedido.form', compact('dado', 'clientes', 'produtos'));
     }
 
-    public function update(Request $request, $id)
+    function update(Request $request, $id)
     {
         $request->validate([
             'status'          => 'required',
@@ -98,25 +91,29 @@ class PedidoController extends Controller
 
         $data = $request->only(['status', 'forma_pagamento', 'frete', 'desconto', 'observacoes']);
 
-        $pedido = Pedido::findOrFail($id);
+        $pedido = Pedido::find($id);
         $total  = $pedido->subtotal + ($data['frete'] ?? 0) - ($data['desconto'] ?? 0);
         $data['total'] = $total;
 
         $pedido->update($data);
-        return redirect()->route('pedido.index')->with('success', 'Pedido atualizado com sucesso!');
+
+        return redirect('pedido')->with('success', 'Registro atualizado com sucesso!');
     }
 
-    public function destroy($id)
+    function destroy($id)
     {
-        $pedido = Pedido::findOrFail($id);
+        $pedido = Pedido::find($id);
         $pedido->itens()->delete();
-        $pedido->delete();
-        return redirect()->route('pedido.index')->with('success', 'Pedido removido com sucesso!');
+
+        Pedido::destroy($id);
+
+        return redirect('pedido')->with('success', 'Registro removido com sucesso!');
     }
 
-    public function search(Request $request)
+    function search(Request $request)
     {
         $query = Pedido::with('cliente');
+
         if (!empty($request->valor)) {
             if ($request->tipo === 'cliente') {
                 $query->whereHas('cliente', fn($q) => $q->where('nome', 'like', '%' . $request->valor . '%'));
@@ -124,7 +121,23 @@ class PedidoController extends Controller
                 $query->where($request->tipo, 'like', '%' . $request->valor . '%');
             }
         }
+
         $dados = $query->orderByDesc('created_at')->get();
+
         return view('pedido.list', ['dados' => $dados]);
+    }
+
+    function validateRequest(Request $request)
+    {
+        $request->validate([
+            'cliente_id'      => 'required|exists:clientes,id',
+            'forma_pagamento' => 'required',
+            'produtos'        => 'required|array|min:1',
+            'produtos.*'      => 'exists:produtos,id',
+            'quantidades.*'   => 'integer|min:1',
+        ], [
+            'cliente_id.required' => 'Selecione um cliente.',
+            'produtos.required'   => 'Adicione ao menos um produto.',
+        ]);
     }
 }

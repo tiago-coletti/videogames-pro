@@ -94,7 +94,6 @@
         </div>
     @endif
 
-    <!-- FORM LOGIN -->
     <div id="form-login">
         <form action="{{ route('login.post') }}" method="POST">
             @csrf
@@ -127,7 +126,6 @@
         </a>
     </div>
 
-    <!-- FORM REGISTRO -->
     <div id="form-registro" style="display:none">
         <form action="{{ route('registro.post') }}" method="POST">
             @csrf
@@ -179,6 +177,10 @@ function showTab(tab) {
     document.getElementById('tab-login').className    = 'tab' + (tab === 'login'    ? ' active' : '');
     document.getElementById('tab-registro').className = 'tab' + (tab === 'registro' ? ' active' : '');
 }
+
+@if($errors->has('nome') || $errors->has('password') || session('error') == false && $errors->any())
+    showTab('registro');
+@endif
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

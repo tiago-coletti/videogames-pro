@@ -53,7 +53,6 @@
 </div>
 
 <div class="row g-3">
-    <!-- ÚLTIMOS PEDIDOS -->
     <div class="col-lg-8">
         <div class="card-gv">
             <div class="card-header d-flex align-items-center justify-content-between">
@@ -97,9 +96,7 @@
         </div>
     </div>
 
-    <!-- ESTOQUE BAIXO + AÇÕES -->
     <div class="col-lg-4">
-        <!-- Ações rápidas -->
         <div class="card-gv mb-3">
             <div class="card-header"><i class="bi bi-lightning me-2" style="color:var(--gv-accent)"></i>Ações Rápidas</div>
             <div style="padding:1rem;display:flex;flex-direction:column;gap:0.5rem">
@@ -118,7 +115,6 @@
             </div>
         </div>
 
-        <!-- Estoque baixo -->
         <div class="card-gv">
             <div class="card-header"><i class="bi bi-exclamation-triangle me-2" style="color:var(--gv-yellow)"></i>Estoque Baixo</div>
             <div style="padding:0.75rem">

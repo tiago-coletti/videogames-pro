@@ -8,7 +8,6 @@
     @if(count($itens) > 0)
     <div class="row g-4">
 
-        <!-- ITENS DO CARRINHO -->
         <div class="col-lg-8">
             <div style="background:var(--gv-card);border:1px solid var(--gv-border);border-radius:12px;overflow:hidden">
                 <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--gv-border);display:flex;justify-content:space-between;align-items:center">
@@ -26,7 +25,6 @@
 
                 @foreach($itens as $item)
                 <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--gv-border);display:flex;gap:1rem;align-items:center">
-                    <!-- Imagem -->
                     <div style="width:72px;height:72px;flex-shrink:0;border-radius:8px;overflow:hidden;background:var(--gv-panel);display:flex;align-items:center;justify-content:center">
                         @if($item['produto']->imagem)
                             <img src="/storage/{{ $item['produto']->imagem }}" alt="" style="width:100%;height:100%;object-fit:cover">
@@ -35,7 +33,6 @@
                         @endif
                     </div>
 
-                    <!-- Info -->
                     <div class="flex-grow-1">
                         <div style="font-weight:600;font-size:0.92rem;color:var(--gv-text)">{{ $item['produto']->nome }}</div>
                         <div style="font-size:0.75rem;color:var(--gv-muted)">
@@ -47,7 +44,6 @@
                         </div>
                     </div>
 
-                    <!-- Quantidade -->
                     <form action="{{ route('carrinho.atualizar', $item['produto']->id) }}" method="POST" class="d-flex align-items-center gap-2">
                         @csrf
                         <div style="display:flex;align-items:center;background:var(--gv-panel);border:1px solid var(--gv-border);border-radius:6px;overflow:hidden">
@@ -59,14 +55,12 @@
                         </div>
                     </form>
 
-                    <!-- Subtotal -->
                     <div style="min-width:90px;text-align:right">
                         <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.1rem;color:var(--gv-text)">
                             R$ {{ number_format($item['subtotal'], 2, ',', '.') }}
                         </div>
                     </div>
 
-                    <!-- Remover -->
                     <form action="{{ route('carrinho.remover', $item['produto']->id) }}" method="POST">
                         @csrf
                         <button type="submit" style="background:none;border:none;color:var(--gv-muted);padding:0.3rem;cursor:pointer;transition:color 0.2s"
@@ -86,7 +80,6 @@
             </div>
         </div>
 
-        <!-- RESUMO / CHECKOUT -->
         <div class="col-lg-4">
             <div style="background:var(--gv-card);border:1px solid var(--gv-border);border-radius:12px;padding:1.5rem;position:sticky;top:80px">
                 <h5 style="font-family:'Rajdhani',sans-serif;font-weight:700;margin-bottom:1.25rem;color:var(--gv-accent)">
@@ -109,7 +102,6 @@
                     </span>
                 </div>
 
-                <!-- Formulário de finalização -->
                 <form action="{{ route('carrinho.finalizar') }}" method="POST">
                     @csrf
                     <div class="mb-3">
@@ -143,7 +135,6 @@
     </div>
 
     @else
-    <!-- CARRINHO VAZIO -->
     <div style="text-align:center;padding:5rem 1rem">
         <div style="font-size:5rem;color:var(--gv-border);margin-bottom:1.5rem">
             <i class="bi bi-bag-x"></i>
