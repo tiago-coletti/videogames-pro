@@ -12,7 +12,6 @@
     </a>
 </div>
 
-<!-- BUSCA -->
 <div class="card-gv mb-3">
     <div style="padding:1rem 1.25rem">
         <form action="{{ route('produto.search') }}" method="POST" class="d-flex gap-2 flex-wrap">
@@ -22,8 +21,12 @@
                 <option value="tipo">Tipo</option>
             </select>
             <input type="text" name="valor" class="form-control flex-grow-1" placeholder="Buscar produto...">
-            <button type="submit" class="btn btn-gv"><i class="bi bi-search me-1"></i> Buscar</button>
-            <a href="{{ route('produto.index') }}" class="btn btn-outline-gv"><i class="bi bi-x"></i></a>
+            <button type="submit" class="btn btn-gv">
+                <i class="bi bi-search me-1"></i> Buscar
+            </button>
+            <a href="{{ route('produto.index') }}" class="btn btn-outline-gv">
+                <i class="bi bi-x"></i>
+            </a>
         </form>
     </div>
 </div>
@@ -60,7 +63,7 @@
                     </td>
                     <td>
                         <div style="font-weight:500;font-size:0.88rem">{{ $item->nome }}</div>
-                        @if($item->tem_promocao)
+                        @if($item->preco_promocional)
                             <span style="font-size:0.68rem;color:var(--gv-red);font-weight:600">PROMOÇÃO</span>
                         @endif
                     </td>
@@ -70,9 +73,9 @@
                         <span style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--gv-accent)">{{ $item->tipo }}</span>
                     </td>
                     <td>
-                        @if($item->tem_promocao)
+                        @if($item->preco_promocional)
                             <div style="font-size:0.75rem;text-decoration:line-through;color:var(--gv-muted)">R$ {{ number_format($item->preco, 2, ',', '.') }}</div>
-                            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--gv-green)">R$ {{ number_format($item->preco_final, 2, ',', '.') }}</div>
+                            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--gv-green)">R$ {{ number_format($item->preco_promocional, 2, ',', '.') }}</div>
                         @else
                             <div style="font-family:'Rajdhani',sans-serif;font-weight:700">R$ {{ number_format($item->preco, 2, ',', '.') }}</div>
                         @endif
@@ -100,9 +103,9 @@
                     </td>
                     <td>
                         <form action="{{ route('produto.destroy', $item->id) }}" method="POST">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-sm" style="border:1px solid var(--gv-red);color:var(--gv-red);background:none"
-                                onclick="return confirm('Remover produto?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm" style="border:1px solid var(--gv-red);color:var(--gv-red);background:none" onclick="return confirm('Remover produto?')">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>

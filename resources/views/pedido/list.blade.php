@@ -7,7 +7,9 @@
         <h4 style="font-family:'Rajdhani',sans-serif;font-weight:700;margin:0">Pedidos</h4>
         <div style="color:var(--gv-muted);font-size:0.82rem">{{ $dados->count() }} pedido(s)</div>
     </div>
-    <a href="{{ route('pedido.create') }}" class="btn btn-gv"><i class="bi bi-plus-circle me-2"></i> Novo Pedido</a>
+    <a href="{{ route('pedido.create') }}" class="btn btn-gv">
+        <i class="bi bi-plus-circle me-2"></i> Novo Pedido
+    </a>
 </div>
 
 <div class="card-gv mb-3">
@@ -20,8 +22,12 @@
                 <option value="cliente">Cliente</option>
             </select>
             <input type="text" name="valor" class="form-control" placeholder="Buscar pedido...">
-            <button type="submit" class="btn btn-gv"><i class="bi bi-search me-1"></i> Buscar</button>
-            <a href="{{ route('pedido.index') }}" class="btn btn-outline-gv"><i class="bi bi-x"></i></a>
+            <button type="submit" class="btn btn-gv">
+                <i class="bi bi-search me-1"></i> Buscar
+            </button>
+            <a href="{{ route('pedido.index') }}" class="btn btn-outline-gv">
+                <i class="bi bi-x"></i>
+            </a>
         </form>
     </div>
 </div>
@@ -59,17 +65,27 @@
                         <span class="badge bg-{{ $item->status_color }} badge-status">{{ $item->status_label }}</span>
                     </td>
                     <td style="font-size:0.8rem;color:var(--gv-muted)">{{ $item->created_at->format('d/m/Y H:i') }}</td>
-                    <td><a href="{{ route('pedido.edit', $item->id) }}" class="btn btn-sm btn-outline-gv"><i class="bi bi-pencil"></i></a></td>
+                    <td>
+                        <a href="{{ route('pedido.edit', $item->id) }}" class="btn btn-sm btn-outline-gv">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
                     <td>
                         <form action="{{ route('pedido.destroy', $item->id) }}" method="POST">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-sm" style="border:1px solid var(--gv-red);color:var(--gv-red);background:none"
-                                onclick="return confirm('Remover pedido?')"><i class="bi bi-trash"></i></button>
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm" style="border:1px solid var(--gv-red);color:var(--gv-red);background:none" onclick="return confirm('Remover pedido?')">
+                                <i class="bi bi-trash"></i>
+                            </button>
                         </form>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="9" class="text-center" style="padding:3rem;color:var(--gv-muted)">Nenhum pedido cadastrado.</td></tr>
+                <tr>
+                    <td colspan="9" class="text-center" style="padding:3rem;color:var(--gv-muted)">
+                        Nenhum pedido cadastrado.
+                    </td>
+                </tr>
                 @endforelse
             </tbody>
         </table>

@@ -3,19 +3,29 @@
 @section('conteudo')
 
 <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{{ route('pedido.index') }}" class="btn btn-sm btn-outline-gv"><i class="bi bi-arrow-left"></i></a>
-    <h4 style="font-family:'Rajdhani',sans-serif;font-weight:700;margin:0">{{ isset($dado) ? 'Editar Pedido #' . $dado->numero : 'Novo Pedido' }}</h4>
+    <a href="{{ route('pedido.index') }}" class="btn btn-sm btn-outline-gv">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <h4 style="font-family:'Rajdhani',sans-serif;font-weight:700;margin:0">
+        {{ isset($dado) ? 'Editar Pedido #' . $dado->numero : 'Novo Pedido' }}
+    </h4>
 </div>
 
 @if(isset($dado))
-{{-- Edição: só altera status, pagamento, frete, desconto --}}
 <div class="row g-3">
     <div class="col-lg-7">
         <div class="card-gv mb-3">
             <div class="card-header">Itens do Pedido</div>
             <div class="table-responsive">
                 <table class="table mb-0">
-                    <thead><tr><th>Produto</th><th>Qtd</th><th>Preço Un.</th><th>Subtotal</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Qtd</th>
+                            <th>Preço Un.</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         @foreach($dado->itens as $item)
                         <tr>
@@ -35,7 +45,8 @@
             <div class="card-header">Atualizar Pedido</div>
             <div style="padding:1.25rem">
                 <form action="{{ route('pedido.update', $dado->id) }}" method="POST">
-                    @csrf @method('PUT')
+                    @csrf
+                    @method('PUT')
                     <div class="mb-3">
                         <label class="form-label">Status *</label>
                         <select name="status" class="form-select" required>
@@ -66,7 +77,9 @@
                         <label class="form-label">Observações</label>
                         <textarea name="observacoes" class="form-control" rows="3">{{ $dado->observacoes }}</textarea>
                     </div>
-                    <button type="submit" class="btn btn-gv w-100"><i class="bi bi-check-circle me-2"></i> Salvar</button>
+                    <button type="submit" class="btn btn-gv w-100">
+                        <i class="bi bi-check-circle me-2"></i> Salvar
+                    </button>
                 </form>
             </div>
         </div>
@@ -74,7 +87,6 @@
 </div>
 
 @else
-{{-- Novo pedido --}}
 <form action="{{ route('pedido.store') }}" method="POST" id="pedidoForm">
     @csrf
     <div class="row g-3">
@@ -187,10 +199,10 @@
         </div>
     </div>
 </template>
-
 @endif
 
 @endsection
+
 @section('scripts')
 <script>
 function addProduto() {
@@ -200,7 +212,10 @@ function addProduto() {
 }
 function removeRow(btn) {
     const rows = document.querySelectorAll('.produto-row');
-    if (rows.length <= 1) { alert('O pedido precisa ter ao menos 1 produto.'); return; }
+    if (rows.length <= 1) {
+        alert('O pedido precisa ter ao menos 1 produto.');
+        return;
+    }
     btn.closest('.produto-row').remove();
 }
 </script>

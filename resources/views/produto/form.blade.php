@@ -3,7 +3,9 @@
 @section('conteudo')
 
 <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{{ route('produto.index') }}" class="btn btn-sm btn-outline-gv"><i class="bi bi-arrow-left"></i></a>
+    <a href="{{ route('produto.index') }}" class="btn btn-sm btn-outline-gv">
+        <i class="bi bi-arrow-left"></i>
+    </a>
     <h4 style="font-family:'Rajdhani',sans-serif;font-weight:700;margin:0">
         {{ isset($dado) ? 'Editar Produto' : 'Novo Produto' }}
     </h4>
@@ -11,10 +13,11 @@
 
 <form action="{{ isset($dado) ? route('produto.update', $dado->id) : route('produto.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
-    @if(isset($dado)) @method('PUT') @endif
+    @if(isset($dado))
+        @method('PUT')
+    @endif
 
     <div class="row g-3">
-        <!-- Coluna esquerda -->
         <div class="col-lg-8">
             <div class="card-gv mb-3">
                 <div class="card-header">Informações Básicas</div>
@@ -46,18 +49,15 @@
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label class="form-label">Preço (R$) *</label>
-                            <input type="number" name="preco" step="0.01" min="0" class="form-control"
-                                value="{{ old('preco', $dado->preco ?? '') }}" required placeholder="0,00">
+                            <input type="number" name="preco" step="0.01" min="0" class="form-control" value="{{ old('preco', $dado->preco ?? '') }}" required placeholder="0,00">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Preço Promocional (R$)</label>
-                            <input type="number" name="preco_promocional" step="0.01" min="0" class="form-control"
-                                value="{{ old('preco_promocional', $dado->preco_promocional ?? '') }}" placeholder="Deixe vazio se não tiver">
+                            <input type="number" name="preco_promocional" step="0.01" min="0" class="form-control" value="{{ old('preco_promocional', $dado->preco_promocional ?? '') }}" placeholder="Deixe vazio se não tiver">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Estoque *</label>
-                            <input type="number" name="estoque" min="0" class="form-control"
-                                value="{{ old('estoque', $dado->estoque ?? 0) }}" required>
+                            <input type="number" name="estoque" min="0" class="form-control" value="{{ old('estoque', $dado->estoque ?? 0) }}" required>
                         </div>
                     </div>
                 </div>
@@ -86,8 +86,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Data de Lançamento</label>
-                            <input type="date" name="data_lancamento" class="form-control"
-                                value="{{ old('data_lancamento', isset($dado) && $dado->data_lancamento ? $dado->data_lancamento->format('Y-m-d') : '') }}">
+                            <input type="date" name="data_lancamento" class="form-control" value="{{ old('data_lancamento', isset($dado) && $dado->data_lancamento ? $dado->data_lancamento->format('Y-m-d') : '') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Plataforma</label>
@@ -112,7 +111,6 @@
             </div>
         </div>
 
-        <!-- Coluna direita -->
         <div class="col-lg-4">
             <div class="card-gv mb-3">
                 <div class="card-header">Imagem do Produto</div>
@@ -123,6 +121,7 @@
                             <div style="font-size:0.72rem;color:var(--gv-muted);margin-top:0.4rem">Imagem atual</div>
                         </div>
                     @endif
+
                     <input type="file" name="imagem" class="form-control" accept="image/png,image/jpg,image/jpeg,image/webp">
                     <div style="font-size:0.72rem;color:var(--gv-muted);margin-top:0.4rem">PNG, JPG ou WEBP. Max 2MB.</div>
                 </div>

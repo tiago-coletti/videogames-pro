@@ -2,7 +2,6 @@
 @section('titulo', 'Início')
 @section('conteudo')
 
-<!-- HERO -->
 <section class="hero">
     <div class="container position-relative">
         <div class="row align-items-center">
@@ -35,7 +34,6 @@
     </div>
 </section>
 
-<!-- PLATAFORMAS -->
 <section class="py-4" style="background:var(--gv-panel);border-bottom:1px solid var(--gv-border)">
     <div class="container">
         <div class="d-flex align-items-center gap-4 flex-wrap justify-content-center">
@@ -53,7 +51,6 @@
     </div>
 </section>
 
-<!-- DESTAQUES -->
 @if($destaques->count() > 0)
 <section class="py-5">
     <div class="container">
@@ -101,7 +98,6 @@
 </section>
 @endif
 
-<!-- CATEGORIAS -->
 @if($categorias->count() > 0)
 <section class="py-5" style="background:var(--gv-panel);border-top:1px solid var(--gv-border);border-bottom:1px solid var(--gv-border)">
     <div class="container">
@@ -130,7 +126,6 @@
 </section>
 @endif
 
-<!-- LANÇAMENTOS -->
 @if($lancamentos->count() > 0)
 <section class="py-5">
     <div class="container">

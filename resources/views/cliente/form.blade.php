@@ -3,13 +3,19 @@
 @section('conteudo')
 
 <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{{ route('cliente.index') }}" class="btn btn-sm btn-outline-gv"><i class="bi bi-arrow-left"></i></a>
-    <h4 style="font-family:'Rajdhani',sans-serif;font-weight:700;margin:0">{{ isset($dado) ? 'Editar Cliente' : 'Novo Cliente' }}</h4>
+    <a href="{{ route('cliente.index') }}" class="btn btn-sm btn-outline-gv">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <h4 style="font-family:'Rajdhani',sans-serif;font-weight:700;margin:0">
+        {{ isset($dado) ? 'Editar Cliente' : 'Novo Cliente' }}
+    </h4>
 </div>
 
 <form action="{{ isset($dado) ? route('cliente.update', $dado->id) : route('cliente.store') }}" method="POST">
     @csrf
-    @if(isset($dado)) @method('PUT') @endif
+    @if(isset($dado))
+        @method('PUT')
+    @endif
 
     <div class="row g-3">
         <div class="col-lg-8">
@@ -35,8 +41,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Data de Nascimento</label>
-                            <input type="date" name="data_nascimento" class="form-control"
-                                value="{{ old('data_nascimento', isset($dado) && $dado->data_nascimento ? $dado->data_nascimento->format('Y-m-d') : '') }}">
+                            <input type="date" name="data_nascimento" class="form-control" value="{{ old('data_nascimento', isset($dado) && $dado->data_nascimento ? (is_string($dado->data_nascimento) ? date('Y-m-d', strtotime($dado->data_nascimento)) : $dado->data_nascimento->format('Y-m-d')) : '') }}">
                         </div>
                     </div>
                 </div>

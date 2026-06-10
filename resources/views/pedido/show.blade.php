@@ -3,19 +3,30 @@
 @section('conteudo')
 
 <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{{ route('pedido.index') }}" class="btn btn-sm btn-outline-gv"><i class="bi bi-arrow-left"></i></a>
+    <a href="{{ route('pedido.index') }}" class="btn btn-sm btn-outline-gv">
+        <i class="bi bi-arrow-left"></i>
+    </a>
     <h4 style="font-family:'Rajdhani',sans-serif;font-weight:700;margin:0">Pedido {{ $pedido->numero }}</h4>
     <span class="badge bg-{{ $pedido->status_color }}">{{ $pedido->status_label }}</span>
 </div>
 
 <div class="row g-3">
     <div class="col-lg-8">
-        <!-- Itens -->
         <div class="card-gv mb-3">
-            <div class="card-header"><i class="bi bi-box-seam me-2" style="color:var(--gv-accent)"></i>Itens do Pedido</div>
+            <div class="card-header">
+                <i class="bi bi-box-seam me-2" style="color:var(--gv-accent)"></i>Itens do Pedido
+            </div>
             <div class="table-responsive">
                 <table class="table mb-0">
-                    <thead><tr><th>Produto</th><th>Plataforma</th><th>Qtd</th><th>Preço Un.</th><th>Subtotal</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Plataforma</th>
+                            <th>Qtd</th>
+                            <th>Preço Un.</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         @foreach($pedido->itens as $item)
                         <tr>
@@ -33,9 +44,10 @@
     </div>
 
     <div class="col-lg-4">
-        <!-- Cliente -->
         <div class="card-gv mb-3">
-            <div class="card-header"><i class="bi bi-person me-2" style="color:var(--gv-accent)"></i>Cliente</div>
+            <div class="card-header">
+                <i class="bi bi-person me-2" style="color:var(--gv-accent)"></i>Cliente
+            </div>
             <div style="padding:1rem">
                 <div style="font-weight:600;margin-bottom:0.25rem">{{ $pedido->cliente->nome }}</div>
                 <div style="font-size:0.82rem;color:var(--gv-muted)">{{ $pedido->cliente->email }}</div>
@@ -45,9 +57,10 @@
             </div>
         </div>
 
-        <!-- Resumo financeiro -->
         <div class="card-gv mb-3">
-            <div class="card-header"><i class="bi bi-receipt me-2" style="color:var(--gv-accent)"></i>Resumo</div>
+            <div class="card-header">
+                <i class="bi bi-receipt me-2" style="color:var(--gv-accent)"></i>Resumo
+            </div>
             <div style="padding:1rem">
                 <div class="d-flex justify-content-between mb-2" style="font-size:0.85rem">
                     <span style="color:var(--gv-muted)">Subtotal</span>
