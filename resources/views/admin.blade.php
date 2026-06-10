@@ -115,8 +115,11 @@
         </a>
 
         <div class="nav-section mt-2">Vendas</div>
-        <a href="{{ route('pedido.index') }}" class="nav-link @if(request()->routeIs('pedido.*')) active @endif">
+        <a href="{{ route('pedido.index') }}" class="nav-link @if(request()->routeIs('pedido.index') || request()->routeIs('pedido.show') || request()->routeIs('pedido.edit') || request()->routeIs('pedido.create')) active @endif">
             <i class="bi bi-receipt"></i> Pedidos
+        </a>
+        <a href="{{ route('pedido.analytics') }}" class="nav-link @if(request()->routeIs('pedido.analytics')) active @endif">
+            <i class="bi bi-bar-chart-line"></i> Relatórios
         </a>
         <a href="{{ route('cliente.index') }}" class="nav-link @if(request()->routeIs('cliente.*')) active @endif">
             <i class="bi bi-people"></i> Clientes

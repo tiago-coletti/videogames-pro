@@ -64,10 +64,12 @@ Route::get('cliente/edit/{id}', [ClienteController::class, 'edit'])->name('clien
 Route::put('cliente/update/{id}', [ClienteController::class, 'update'])->name('cliente.update');
 
 Route::get('/pedido', [PedidoController::class, 'index'])->name('pedido.index');
+Route::get('/pedido/analytics', [PedidoController::class, 'chart'])->name('pedido.analytics');
+Route::get('/pedido/report', [PedidoController::class, 'report'])->name('pedido.report');
 Route::get('/pedido/create', [PedidoController::class, 'create'])->name('pedido.create');
 Route::post('/pedido', [PedidoController::class, 'store'])->name('pedido.store');
-Route::delete('/pedido/{id}', [PedidoController::class, 'destroy'])->name('pedido.destroy');
 Route::post('/pedido/search', [PedidoController::class, 'search'])->name('pedido.search');
+Route::delete('/pedido/{id}', [PedidoController::class, 'destroy'])->name('pedido.destroy');
 Route::get('/pedido/{id}', [PedidoController::class, 'show'])->name('pedido.show');
 Route::get('pedido/edit/{id}', [PedidoController::class, 'edit'])->name('pedido.edit');
 Route::put('pedido/update/{id}', [PedidoController::class, 'update'])->name('pedido.update');

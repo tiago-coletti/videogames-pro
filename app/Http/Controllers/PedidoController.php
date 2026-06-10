@@ -8,6 +8,9 @@ use App\Models\Pedido;
 use App\Models\PedidoItem;
 use App\Models\Cliente;
 use App\Models\Produto;
+use App\Charts\JogosMaisVendidos;
+use App\Charts\PlataformasMaisVendidas;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PedidoController extends Controller
 {
@@ -84,10 +87,7 @@ class PedidoController extends Controller
 
     function update(Request $request, $id)
     {
-        $request->validate([
-            'status'          => 'required',
-            'forma_pagamento' => 'required',
-        ]);
+        $this->validateRequest($request, true);
 
         $data = $request->only(['status', 'forma_pagamento', 'frete', 'desconto', 'observacoes']);
 
@@ -97,7 +97,7 @@ class PedidoController extends Controller
 
         $pedido->update($data);
 
-        return redirect('pedido')->with('success', 'Registro atualizado com sucesso!');
+        return redirect('pedido')->with('success', 'Registro updated com sucesso!');
     }
 
     function destroy($id)
@@ -127,17 +127,43 @@ class PedidoController extends Controller
         return view('pedido.list', ['dados' => $dados]);
     }
 
-    function validateRequest(Request $request)
+    public function chart(JogosMaisVendidos $chart1, PlataformasMaisVendidas $chart2)
     {
-        $request->validate([
-            'cliente_id'      => 'required|exists:clientes,id',
-            'forma_pagamento' => 'required',
-            'produtos'        => 'required|array|min:1',
-            'produtos.*'      => 'exists:produtos,id',
-            'quantidades.*'   => 'integer|min:1',
-        ], [
-            'cliente_id.required' => 'Selecione um cliente.',
-            'produtos.required'   => 'Adicione ao menos um produto.',
+        return view('pedido.analytics', [
+            'chart1' => $chart1->build(),
+            'chart2' => $chart2->build(),
         ]);
+    }
+
+    public function report()
+    {
+        $pedidos = Pedido::with('cliente')->orderByDesc('created_at')->get();
+        $data = [
+            'titulo' => 'Relatório Geral de Pedidos',
+            'pedidos' => $pedidos
+        ];
+        $pdf = Pdf::loadView('pedido.report', $data);
+        return $pdf->download('relatorio_geral_pedidos.pdf');
+    }
+
+    function validateRequest(Request $request, $isUpdate = false)
+    {
+        if ($isUpdate) {
+            $request->validate([
+                'status'          => 'required',
+                'forma_pagamento' => 'required',
+            ]);
+        } else {
+            $request->validate([
+                'cliente_id'      => 'required|exists:clientes,id',
+                'forma_pagamento' => 'required',
+                'produtos'        => 'required|array|min:1',
+                'produtos.*'      => 'exists:produtos,id',
+                'quantidades.*'   => 'integer|min:1',
+            ], [
+                'cliente_id.required' => 'Selecione um cliente.',
+                'produtos.required'   => 'Adicione ao menos um produto.',
+            ]);
+        }
     }
 }
