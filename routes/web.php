@@ -66,6 +66,9 @@ Route::put('cliente/update/{id}', [ClienteController::class, 'update'])->name('c
 Route::get('/pedido', [PedidoController::class, 'index'])->name('pedido.index');
 Route::get('/pedido/analytics', [PedidoController::class, 'chart'])->name('pedido.analytics');
 Route::get('/pedido/report', [PedidoController::class, 'report'])->name('pedido.report');
+Route::get('/pedido/report-jogos', [PedidoController::class, 'reportJogos'])->name('pedido.report_jogos');
+Route::get('/pedido/report-plataformas', [PedidoController::class, 'reportPlataformas'])->name('pedido.report_plataformas');
+Route::get('/pedido/report-status', [PedidoController::class, 'reportStatus'])->name('pedido.report_status');
 Route::get('/pedido/create', [PedidoController::class, 'create'])->name('pedido.create');
 Route::post('/pedido', [PedidoController::class, 'store'])->name('pedido.store');
 Route::post('/pedido/search', [PedidoController::class, 'search'])->name('pedido.search');

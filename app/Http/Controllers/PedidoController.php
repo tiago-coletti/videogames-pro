@@ -10,7 +10,9 @@ use App\Models\Cliente;
 use App\Models\Produto;
 use App\Charts\JogosMaisVendidos;
 use App\Charts\PlataformasMaisVendidas;
+use App\Charts\StatusPedidosChart;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class PedidoController extends Controller
 {
@@ -127,11 +129,12 @@ class PedidoController extends Controller
         return view('pedido.list', ['dados' => $dados]);
     }
 
-    public function chart(JogosMaisVendidos $chart1, PlataformasMaisVendidas $chart2)
+    public function chart(JogosMaisVendidos $chart1, PlataformasMaisVendidas $chart2, StatusPedidosChart $chart3)
     {
         return view('pedido.analytics', [
             'chart1' => $chart1->build(),
             'chart2' => $chart2->build(),
+            'chart3' => $chart3->build(),
         ]);
     }
 
@@ -144,6 +147,55 @@ class PedidoController extends Controller
         ];
         $pdf = Pdf::loadView('pedido.report', $data);
         return $pdf->download('relatorio_geral_pedidos.pdf');
+    }
+
+    public function reportJogos()
+    {
+        $jogos = PedidoItem::select('produto_id', DB::raw('SUM(quantidade) as total_vendido'), DB::raw('SUM(subtotal) as receita_total'))
+            ->with('produto')
+            ->groupBy('produto_id')
+            ->orderByDesc('total_vendido')
+            ->get();
+
+        $data = [
+            'titulo' => 'Relatório de Jogos Mais Vendidos',
+            'jogos' => $jogos
+        ];
+        $pdf = Pdf::loadView('pedido.report_jogos', $data);
+        return $pdf->download('relatorio_jogos_mais_vendidos.pdf');
+    }
+
+    public function reportPlataformas()
+    {
+        $plataformas = PedidoItem::select('produtos.plataforma_id', DB::raw('SUM(pedido_itens.quantidade) as total_vendido'), DB::raw('SUM(pedido_itens.subtotal) as receita_total'))
+            ->join('produtos', 'pedido_itens.produto_id', '=', 'produtos.id')
+            ->with('produto.plataforma')
+            ->groupBy('produtos.plataforma_id')
+            ->orderByDesc('total_vendido')
+            ->get();
+
+        $data = [
+            'titulo' => 'Relatório de Plataformas Mais Vendidas',
+            'plataformas' => $plataformas
+        ];
+        $pdf = Pdf::loadView('pedido.report_plataformas', $data);
+        return $pdf->download('relatorio_plataformas_mais_vendidas.pdf');
+    }
+
+    public function reportStatus()
+    {
+        $statusCounts = DB::table('pedidos')
+            ->select('status', DB::raw('COUNT(*) as total_pedidos'), DB::raw('SUM(total) as receita_total'))
+            ->groupBy('status')
+            ->orderByDesc('total_pedidos')
+            ->get();
+
+        $data = [
+            'titulo' => 'Relatório de Status de Pedidos',
+            'statusCounts' => $statusCounts
+        ];
+        $pdf = Pdf::loadView('pedido.report_status', $data);
+        return $pdf->download('relatorio_status_pedidos.pdf');
     }
 
     function validateRequest(Request $request, $isUpdate = false)
